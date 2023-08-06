@@ -1,0 +1,57 @@
+﻿@page "/cart"
+@model CartModel
+@{
+}
+
+<div>
+	<div class="text-center display-6">
+		Cart
+	</div>
+	<table> <!-- artık burda TableTagHelper sayesinde table class belirlememize gerek yok-->
+	<thead> <!-- başlık-->
+		<tr> <!-- satır-->
+			<th>Product</th>  <!-- alan -->
+			<th>Quantity</th>
+			<th>Price</th>
+			<th>Subtotal</th>
+			<th> </th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- eğer bir cart line varsa ona gidecek yoksa boş bir cartline yaratacak-->
+		@foreach (var line in Model.Cart?.Lines ?? Enumerable.Empty<CartLine>())
+			{
+				<tr>
+					<td>@line.Product.ProductName</td>  <!--table data-->
+					<td>@line.Quantity</td>
+					<td>@line.Product.Price.ToString("c")</td>
+					<td>@((line.Product.Price * line.Quantity).ToString("c2"))</td>
+					<td>
+						<!-- asp-page-handler => iki tane post işlemini birbirinden ayırmak için kullanılır -->
+						<form method="post" asp-page-handler="Remove">
+							<input type="hidden" name="id" value="@line.Product.ProductId"/>
+							<input type="hidden" name="returnUrl" value="/Product/Get/@line.Product.ProductId">
+							<button type="submit" class="btn btn-sm btn-danger">
+								<i class="fa fa-remove"></i>
+								Remove
+							</button>
+						</form>
+					</td>
+					
+				</tr>
+			}
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="4" class="text-right">Total :</td>
+			<td class="text-right text-danger">@Model.Cart?.ComputeTotalValue().ToString("c2")</td>
+		</tr>
+	</tfoot>
+	</table>
+	<div class="text-center my-3">
+		<div class="btn-group">
+			<a class="btn btn-primary" href="@Model.ReturnUrl">Continue Shopping</a>
+			<a class="btn btn-primary mx-2" asp-action="Checkout" asp-controller="Order">Checkout</a>
+		</div>
+	</div>
+</div>

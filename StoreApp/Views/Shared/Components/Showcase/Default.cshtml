@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Product>
+@{
+}
+<div class="text-center">
+	<h6 class="display-6">Showcase</h6>
+</div>
+
+<div class="row">
+	@foreach (var product in Model)
+	{
+		<partial name="_ProductPartial" model="@product"/>
+	}
+</div>
+<!-- Burdan normal anasayfada ürünlerin fotoğrafları ile gelmesini ayarlıyoruz.-->
